@@ -15,8 +15,8 @@ describe('dateString', function() {
     $document = _$document_;
     form = $compile('<form ng-name="testForm"><input name="testInput" ng-model="inputValue" date-string></input></form>')($rootScope);
     element = form.find('input');
-    var body = $document.find('body');
-    body.append(element);
+    // input positioning does not work without
+    var body = $document.find('body').append(form);
     $rootScope.$digest();
   }));
 
@@ -28,9 +28,6 @@ describe('dateString', function() {
   });
   describe('should work without data', function() {
     test('', '', 0, '', 0, true);
-  });
-  describe('should save position if in between', function() {
-    test('', '12.12.00', 3, '12.12.2000', 3, true);
   });
   describe('should fill month and day with zero if dot is added', function() {
     test('', '1.', 2, '01.', 3, false);
@@ -63,15 +60,18 @@ describe('dateString', function() {
   describe('should allow deletion by backspace', function() {
     test('12.34.', '12.34', 5, '12.34.', 5, false);
   });
-  describe('Failing tests if edited within', function() {
+  describe('should allow edit numbers within', function() {
     test('12.12.2012', '12.2.2012', 3, '12.2.2012', 3, false);
-    test('12.12.2012', '2.12.2012', 3, '2.12.2012', 3, false);
-    test('12.12.2012', '12.12.212', 3, '12.12.212', 3, false);
+    test('12.12.2012', '2.12.2012', 0, '2.12.2012', 0, false);
+    test('12.12.2012', '12.12.212', 7, '12.12.212', 7, false);
+  });
+  describe('should allow edit separator within', function() {
+    test('12.12.2012', '1212.2012', 3, '1212.2012', 3, false);
   });
 
 
   function test(prevVal, input, pos, output, posAfter, expectedToBeValid) {
-    var description = 'test(\'' + prevVal + '\', \'' + input + '\', ' + pos + ', \'' + output + '\', ' + posAfter + '); ->';
+    var description = 'test(\'' + prevVal + '\', \'' + input + '\', ' + pos + ', \'' + output + '\', ' + posAfter + ', ' + expectedToBeValid + '); -> ';
     it(description, function test() {
       element.val(prevVal);
       element.triggerHandler('input');

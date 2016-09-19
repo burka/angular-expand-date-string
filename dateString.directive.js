@@ -24,6 +24,8 @@
 		}
 
 		function expandYear(yearString) {
+			if (!yearString)
+				return yearString;
 			var year = parseInt(yearString);
 			if (yearString.length === 2 && year !== 20 && year !== 19) {
 				if (year > 49) {
@@ -38,13 +40,15 @@
 
 		function addDotsAndFullYear(input, cursorWithin) {
 			var prependZeroes = !cursorWithin;
+			var dots = (input.match(/\./g) || []).length;
+			input = input.replace(/\.+$/, '.');
 			var parts = input.split('.');
+
 			if (parts.length == 1) {
 				parts = [];
 				var days = input.substring(0, 2);
-				if (days) {
-					parts.push(days);
-				}
+				parts.push(days);
+
 				var months = input.substring(2, 4);
 				if (months) {
 					parts.push(months);
@@ -55,20 +59,21 @@
 					parts.push(yearString);
 				}
 			}
-			if (parts.length > 1) {
+			if (parts.length > 1 && dots >= 1) {
 				if (parts[0].length === 1 && prependZeroes)
 					parts[0] = '0' + parts[0];
 			}
-			if (parts.length > 2) {
+			if (parts.length > 2 && dots >= 2) {
 				if (parts[1].length === 1 && prependZeroes)
 					parts[1] = '0' + parts[1];
 			}
-			if (parts.length >= 3 && parts[2].length > 0) {
+			if (parts.length >= 3) {
 				parts[2] = expandYear(parts[2]);
 			}
+
 			var output = parts.join('.');
 
-			if (output.length == 2 || output.length == 5)
+			if ((output.length == 2 || output.length == 5))
 				output += '.';
 
 			return output;
@@ -116,7 +121,6 @@
 					return inputValue;
 				}
 
-				inputValue = inputValue.replace(/\.\.$/, '.');
 				var originalCursorPosition = getPosition();
 
 				var cursorNotAtEnd = ((originalCursorPosition) < inputValue.length);
