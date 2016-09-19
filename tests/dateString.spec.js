@@ -6,7 +6,7 @@ describe('dateString', function() {
   var element = null;
   var form = null;
   var $document = null;
-  
+
   beforeEach(module('dateString'));
 
   beforeEach(inject(function(_$rootScope_, _$compile_, _$document_) {
@@ -45,7 +45,7 @@ describe('dateString', function() {
   });
   describe('should allow 6-digit-entry', function() {
     test('', '111111', 6, '11.11.2011', 10, true);
-    
+
   });
   describe('should find the right cursor position during deletion', function() {
     test('', '11', 2, '11.', 3, false);
@@ -64,7 +64,9 @@ describe('dateString', function() {
     test('12.34.', '12.34', 5, '12.34.', 5, false);
   });
   describe('Failing tests if edited within', function() {
-  //  test('12.12.2012', '12.2.2012', 3, '12.2.2012', 3, false);
+    test('12.12.2012', '12.2.2012', 3, '12.2.2012', 3, false);
+    test('12.12.2012', '2.12.2012', 3, '2.12.2012', 3, false);
+    test('12.12.2012', '12.12.212', 3, '12.12.212', 3, false);
   });
 
 
@@ -74,12 +76,13 @@ describe('dateString', function() {
       element.val(prevVal);
       element.triggerHandler('input');
       $rootScope.$digest();
-      
+
       element.val(input);
       element[0].setSelectionRange(pos, pos);
       element.triggerHandler('input');
       $rootScope.$digest();
-  
+
+      expect(element.val()).toEqual(output);
       expect(form.controller('form').$valid).toBe(expectedToBeValid, '$valid has wrong value');
       expect(element[0].selectionStart).toEqual(posAfter, 'Cursor position is wrong');
       expect(element[0].selectionEnd).toEqual(posAfter, 'Cursor position is wrong');

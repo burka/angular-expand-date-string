@@ -23,22 +23,6 @@
 			return input.replace(/\.$/, '');
 		}
 
-		function removeDotsAndPrependZeroes(input, cursorWithin) {
-			var parts = input.split('.');
-			if (!cursorWithin)
-				return parts.join('');
-
-			if (parts.length > 1) {
-				if (parts[0].length === 1)
-					parts[0] = '0' + parts[0];
-			}
-			if (parts.length > 2) {
-				if (parts[1].length === 1)
-					parts[1] = '0' + parts[1];
-			}
-			return parts.join('');
-		}
-
 		function expandYear(yearString) {
 			var year = parseInt(yearString);
 			if (yearString.length === 2 && year !== 20 && year !== 19) {
@@ -53,21 +37,41 @@
 		}
 
 		function addDotsAndFullYear(input, cursorWithin) {
-			input = removeDotsAndPrependZeroes(input, cursorWithin);
+			var prependZeroes = !cursorWithin;
+			var parts = input.split('.');
+			if (parts.length == 1) {
+				parts = [];
+				var days = input.substring(0, 2);
+				if (days) {
+					parts.push(days);
+				}
+				var months = input.substring(2, 4);
+				if (months) {
+					parts.push(months);
+				}
 
-			var length = input.length;
-			var result = input.substring(0, 2);
-			if (length >= 2)
-				result += '.' + input.substring(2, 4);
-			if (length >= 4)
-				result += '.';
-			if (length > 4) {
 				var yearString = input.substring(4);
-				var year = expandYear(yearString);
-				result += year;
+				if (yearString) {
+					parts.push(yearString);
+				}
 			}
+			if (parts.length > 1) {
+				if (parts[0].length === 1 && prependZeroes)
+					parts[0] = '0' + parts[0];
+			}
+			if (parts.length > 2) {
+				if (parts[1].length === 1 && prependZeroes)
+					parts[1] = '0' + parts[1];
+			}
+			if (parts.length >= 3 && parts[2].length > 0) {
+				parts[2] = expandYear(parts[2]);
+			}
+			var output = parts.join('.');
 
-			return result;
+			if (output.length == 2 || output.length == 5)
+				output += '.';
+
+			return output;
 		}
 
 		function link(scope, element, attrs, modelCtrl) {
@@ -89,7 +93,7 @@
 
 			function calcNewPosition(oldPosition, inputValue, oldViewValue, transformedValue) {
 				var origHasTwoDotsAtEnd = ENDS_WITH_TWO_DOTS_REGEXP.test(inputValue);
-				var transformedHasSingleDotAtEnd = ENDS_WITH_DOT_REGEXP.test(transformedValue) && !origHasTwoDotsAtEnd;
+				var transformedHasSingleDotAtEnd = !origHasTwoDotsAtEnd && ENDS_WITH_DOT_REGEXP.test(transformedValue);
 				var cursorAtEnd = oldPosition >= inputValue.length;
 				var cursorBeforeLastSingleDot = transformedHasSingleDotAtEnd && ((oldPosition + 1) === inputValue.length);
 				var wasDeletionAtEnd = oldViewValue.substring(0, oldViewValue.length - 1) === inputValue;
@@ -107,7 +111,6 @@
 
 
 			function dateParser(inputValue) {
-
 				if (modelCtrl.$isEmpty(inputValue)) {
 					lastValue = '';
 					return inputValue;
@@ -115,14 +118,14 @@
 
 				inputValue = inputValue.replace(/\.\.$/, '.');
 				var originalCursorPosition = getPosition();
-				
+
 				var cursorNotAtEnd = ((originalCursorPosition) < inputValue.length);
 				if (cursorNotAtEnd) {
 					inputValue = removeLastDot(inputValue);
 				}
 				var transformedInput = inputValue;
-					transformedInput = addDotsAndFullYear(inputValue, !cursorNotAtEnd);
-				
+				transformedInput = addDotsAndFullYear(inputValue, cursorNotAtEnd);
+
 				if (modelCtrl.$viewValue !== transformedInput) {
 					var position = calcNewPosition(originalCursorPosition, inputValue, lastValue,
 						transformedInput);
