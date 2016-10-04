@@ -37,7 +37,8 @@ describe('dateString', function() {
   describe('should complete the year', function() {
     test('', '1.1.99', 6, '01.01.1999', 10, true);
     test('', '11.11.99', 8, '11.11.1999', 10, true);
-    test('', '11.11.12', 5, '11.11.2012', 5, true);
+    test('', '11.11.12', 8, '11.11.2012', 10, true);
+    test('', '11.11.12', 8, '11.11.2012', 10, true);
     test('', '11.11.19', 5, '11.11.19', 5, false);
   });
   describe('should allow 6-digit-entry', function() {
@@ -46,19 +47,19 @@ describe('dateString', function() {
   });
   describe('should find the right cursor position during deletion', function() {
     test('', '11', 2, '11.', 3, false);
-    test('', '123.', 3, '12.3', 4, false);
+    test('', '123.', 3, '123.', 3, false);
     test('', '12.3.', 5, '12.03.', 6, false);
     test('', '12.3', 4, '12.3', 4, false);
     test('', '12.34', 5, '12.34.', 6, false);
-    test('', '0.', 1, '0', 1, false);
+    test('', '0.', 1, '0.', 1, false);
   });
 
   describe('should ignore double dots due to cursor placement', function() {
-    test('', '12..', 3, '12.', 3, false);
+    test('', '12..', 3, '12..', 3, false);
     test('', '12..', 4, '12.', 3, false);
   });
   describe('should allow deletion by backspace', function() {
-    test('12.34.', '12.34', 5, '12.34.', 5, false);
+    test('12.34.', '12.34', 5, '12.34', 5, false);
   });
   describe('should allow edit numbers within', function() {
     test('12.12.2012', '12.2.2012', 3, '12.2.2012', 3, false);
@@ -67,6 +68,18 @@ describe('dateString', function() {
   });
   describe('should allow edit separator within', function() {
     test('12.12.2012', '1212.2012', 3, '1212.2012', 3, false);
+  });
+  describe('should allow delete from beginning', function() {
+    test('12.12.2012', '2.12.2012', 0, '2.12.2012', 0, false);
+    test('2.12.2012', '.12.2012', 0, '.12.2012', 0, false);
+    test('.12.2012', '12.2012', 0, '12.2012', 0, false);
+    test('12.2012', '2.2012', 0, '2.2012', 0, false);
+    test('2.2012', '.2012', 0, '.2012', 0, false);
+    test('.2012', '2012', 0, '2012', 0, false);
+    test('2012', '012', 0, '012', 0, false);
+    test('012', '12', 0, '12', 0, false);
+    test('12', '2', 0, '2', 0, false);
+    test('2', '', 0, '', 0, true);
   });
 
 

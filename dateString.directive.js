@@ -19,10 +19,6 @@
 		};
 		return directive;
 
-		function removeLastDot(input) {
-			return input.replace(/\.$/, '');
-		}
-
 		function expandYear(yearString) {
 			if (!yearString)
 				return yearString;
@@ -38,8 +34,7 @@
 			return year;
 		}
 
-		function addDotsAndFullYear(input, cursorWithin) {
-			var prependZeroes = !cursorWithin;
+		function addDotsAndFullYear(input) {
 			var dots = (input.match(/\./g) || []).length;
 			input = input.replace(/\.+$/, '.');
 			var parts = input.split('.');
@@ -60,11 +55,11 @@
 				}
 			}
 			if (parts.length > 1 && dots >= 1) {
-				if (parts[0].length === 1 && prependZeroes)
+				if (parts[0].length === 1)
 					parts[0] = '0' + parts[0];
 			}
 			if (parts.length > 2 && dots >= 2) {
-				if (parts[1].length === 1 && prependZeroes)
+				if (parts[1].length === 1)
 					parts[1] = '0' + parts[1];
 			}
 			if (parts.length >= 3) {
@@ -92,28 +87,9 @@
 					return DATE_REGEXP.test(modelValue);
 				};
 
-			function getPosition() {
-				return el.selectionStart;
+			function isCursorBeforeEnd(inputValue) {
+				return el.selectionStart < inputValue.length;
 			}
-
-			function calcNewPosition(oldPosition, inputValue, oldViewValue, transformedValue) {
-				var origHasTwoDotsAtEnd = ENDS_WITH_TWO_DOTS_REGEXP.test(inputValue);
-				var transformedHasSingleDotAtEnd = !origHasTwoDotsAtEnd && ENDS_WITH_DOT_REGEXP.test(transformedValue);
-				var cursorAtEnd = oldPosition >= inputValue.length;
-				var cursorBeforeLastSingleDot = transformedHasSingleDotAtEnd && ((oldPosition + 1) === inputValue.length);
-				var wasDeletionAtEnd = oldViewValue.substring(0, oldViewValue.length - 1) === inputValue;
-
-				if (wasDeletionAtEnd && cursorAtEnd && transformedHasSingleDotAtEnd) {
-					return transformedValue.length - 1;
-				}
-
-				if (cursorAtEnd || cursorBeforeLastSingleDot) {
-					return transformedValue.length;
-				}
-
-				return oldPosition;
-			}
-
 
 			function dateParser(inputValue) {
 				if (modelCtrl.$isEmpty(inputValue)) {
@@ -121,22 +97,20 @@
 					return inputValue;
 				}
 
-				var originalCursorPosition = getPosition();
-
-				var cursorNotAtEnd = ((originalCursorPosition) < inputValue.length);
-				if (cursorNotAtEnd) {
-					inputValue = removeLastDot(inputValue);
+				var wasDeletionAtEnd = lastValue.substring(0, lastValue.length - 1) === inputValue;
+				if (isCursorBeforeEnd(inputValue) || wasDeletionAtEnd){
+					lastValue = inputValue;
+					return inputValue;
 				}
-				var transformedInput = inputValue;
-				transformedInput = addDotsAndFullYear(inputValue, cursorNotAtEnd);
+					
+				var	transformedInput = addDotsAndFullYear(inputValue);
 
 				if (modelCtrl.$viewValue !== transformedInput) {
-					var position = calcNewPosition(originalCursorPosition, inputValue, lastValue,
-						transformedInput);
+					var position = transformedInput.length;
 
 					modelCtrl.$setViewValue(transformedInput);
-					modelCtrl.$render();
 					el.setSelectionRange(position, position);
+					modelCtrl.$render();
 
 				}
 				lastValue = transformedInput;
