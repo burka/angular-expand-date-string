@@ -16,7 +16,7 @@ describe('dateString', function() {
     form = $compile('<form ng-name="testForm"><input name="testInput" ng-model="inputValue" date-string></input></form>')($rootScope);
     element = form.find('input');
     // input positioning does not work without
-    var body = $document.find('body').append(form);
+    $document.find('body').append(form);
     $rootScope.$digest();
   }));
 
@@ -80,6 +80,20 @@ describe('dateString', function() {
     test('012', '12', 0, '12', 0, false);
     test('12', '2', 0, '2', 0, false);
     test('2', '', 0, '', 0, true);
+  });
+
+  it('should format on blur', function() {
+    element.val('1.01.2000');
+    element[0].setSelectionRange(0, 0);
+    element.triggerHandler('input');
+    $rootScope.$digest();
+
+    expect(element.val()).toEqual('1.01.2000');
+
+    element.triggerHandler('blur');
+    $rootScope.$digest();
+
+    expect(element.val()).toEqual('01.01.2000');
   });
 
 

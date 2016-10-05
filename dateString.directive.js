@@ -79,13 +79,17 @@
 			var lastValue = '';
 
 			modelCtrl.$parsers.push(dateParser);
-			modelCtrl.$validators.dateString =
-				function dateStringValidator(modelValue, viewValue) {
-					if (modelCtrl.$isEmpty(modelValue)) {
-						return true;
-					}
-					return DATE_REGEXP.test(modelValue);
-				};
+			modelCtrl.$validators.dateString = dateStringValidator;
+			element.on('blur', transformElementValue);
+
+
+			function dateStringValidator(modelValue, viewValue) {
+				if (modelCtrl.$isEmpty(modelValue)) {
+					return true;
+				}
+				return DATE_REGEXP.test(modelValue);
+			};
+	
 
 			function isCursorBeforeEnd(inputValue) {
 				return el.selectionStart < inputValue.length;
@@ -98,23 +102,29 @@
 				}
 
 				var wasDeletionAtEnd = lastValue.substring(0, lastValue.length - 1) === inputValue;
-				if (isCursorBeforeEnd(inputValue) || wasDeletionAtEnd){
+				if (isCursorBeforeEnd(inputValue) || wasDeletionAtEnd) {
 					lastValue = inputValue;
 					return inputValue;
 				}
-					
-				var	transformedInput = addDotsAndFullYear(inputValue);
 
+				return transformInput(inputValue);
+			}
+
+			function transformInput(inputValue) {
+				var transformedInput = addDotsAndFullYear(inputValue);
 				if (modelCtrl.$viewValue !== transformedInput) {
 					var position = transformedInput.length;
 
 					modelCtrl.$setViewValue(transformedInput);
 					el.setSelectionRange(position, position);
 					modelCtrl.$render();
-
 				}
 				lastValue = transformedInput;
 				return transformedInput;
+			}
+			
+			function transformElementValue(event){
+				transformInput(element.val());
 			}
 		}
 	}
