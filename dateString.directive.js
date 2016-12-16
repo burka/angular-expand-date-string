@@ -110,7 +110,12 @@
 				return transformInput(inputValue);
 			}
 
+			function eatAllNonRelevantCharacters(input){
+				return input.replace(/[^0-9,\.]/g,'');
+			}
+			
 			function transformInput(inputValue) {
+				inputValue = eatAllNonRelevantCharacters(inputValue);
 				var transformedInput = addDotsAndFullYear(inputValue);
 				if (modelCtrl.$viewValue !== transformedInput) {
 					var position = transformedInput.length;

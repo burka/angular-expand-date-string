@@ -81,6 +81,10 @@ describe('dateString', function() {
     test('12', '2', 0, '2', 0, false);
     test('2', '', 0, '', 0, true);
   });
+  describe('should eat illegal characters on change', function() {
+    test('Invalid Date', 'Invalid Date', 0, 'Invalid Date', 0, false);
+    test('01.01.', '01.01.asd', 9, '01.01.', 6, false);
+  });
 
   it('should format on blur', function() {
     element.val('1.01.2000');
