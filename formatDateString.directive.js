@@ -1,17 +1,17 @@
 (function(angular) {
 	'use strict';
-	angular.module('dateString', []);
+	angular.module('formatDateString', []);
 
-	angular.module('dateString').directive('dateString', dateStringDirective);
+	angular.module('formatDateString').directive('formatDateString', formatDateStringDirective);
 
 	var DATE_REGEXP = /^([0-3][0-9])\.([01][0-9])\.((19|20)[0-9]{2})$/;
 	var YEAR_START_REGEXP = /^(19|20)$/;
 	var ENDS_WITH_DOT_REGEXP = /\.$/;
 	var ENDS_WITH_TWO_DOTS_REGEXP = /\.\.$/;
-	dateStringDirective.$inject = [];
+	formatDateStringDirective.$inject = [];
 
 	/* @ngInject */
-	function dateStringDirective() {
+	function formatDateStringDirective() {
 		var directive = {
 			link: link,
 			restrict: 'A',

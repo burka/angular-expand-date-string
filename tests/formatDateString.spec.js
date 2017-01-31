@@ -1,19 +1,19 @@
 'use strict';
 
-describe('dateString', function() {
+describe('Format Date String', function() {
   var $rootScope = null;
   var $compile = null;
   var element = null;
   var form = null;
   var $document = null;
 
-  beforeEach(module('dateString'));
+  beforeEach(module('formatDateString'));
 
   beforeEach(inject(function(_$rootScope_, _$compile_, _$document_) {
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     $document = _$document_;
-    form = $compile('<form ng-name="testForm"><input name="testInput" ng-model="inputValue" date-string></input></form>')($rootScope);
+    form = $compile('<form ng-name="testForm"><input name="testInput" ng-model="inputValue" format-date-string></input></form>')($rootScope);
     element = form.find('input');
     // input positioning does not work without
     $document.find('body').append(form);
