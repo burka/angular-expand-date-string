@@ -1,14 +1,14 @@
 {
-  "name": "date-string",
+  "name": "angular-format-date-string",
   "version": "1.0.0",
-  "description": "A simple date string input helper",
-  "main": "dateInput.directive.js",
+  "description": "A simple date string formatting helper",
+  "main": "formatDateString.directive.js",
   "scripts": {
     "test": "karma start --single-run"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/burka/angular-dateinput.git"
+    "url": "https://github.com/burka/angular-format-date-string.git"
   },
   "keywords": [
     "angular",
@@ -18,9 +18,9 @@
   "author": "Florian Burka",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/burka/angular-dateinput/issues"
+    "url": "https://github.com/burka/angular-format-date-string/issues"
   },
-  "homepage": "https://github.com/burka/angular-dateinput#readme",
+  "homepage": "https://github.com/burka/angular-format-date-string#readme",
   "devDependencies": {
     "angular": "^1.3.17",
     "angular-mocks": "^1.3.17",
