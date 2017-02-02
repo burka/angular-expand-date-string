@@ -1,17 +1,17 @@
-(function(angular) {
+(function() {
 	'use strict';
-	angular.module('formatDateString', []);
+	angular.module('expandDateString', []);
 
-	angular.module('formatDateString').directive('formatDateString', formatDateStringDirective);
+	angular.module('expandDateString').directive('expandDateString', expandDateStringDirective);
 
 	var DATE_REGEXP = /^([0-3][0-9])\.([01][0-9])\.((19|20)[0-9]{2})$/;
 	var YEAR_START_REGEXP = /^(19|20)$/;
 	var ENDS_WITH_DOT_REGEXP = /\.$/;
 	var ENDS_WITH_TWO_DOTS_REGEXP = /\.\.$/;
-	formatDateStringDirective.$inject = [];
+	expandDateStringDirective.$inject = [];
 
 	/* @ngInject */
-	function formatDateStringDirective() {
+	function expandDateStringDirective() {
 		var directive = {
 			link: link,
 			restrict: 'A',
@@ -78,16 +78,19 @@
 			var el = element[0];
 			var lastValue = '';
 
-			modelCtrl.$parsers.push(dateParser);
-			modelCtrl.$validators.dateString = dateStringValidator;
+			modelCtrl.$parsers.unshift(dateParser);
+			modelCtrl.$validators.expandDateString = dateStringValidator;
 			element.on('blur', transformElementValue);
 
 
 			function dateStringValidator(modelValue, viewValue) {
-				if (modelCtrl.$isEmpty(modelValue)) {
+				if (modelCtrl.$isEmpty(viewValue)) {
 					return true;
 				}
-				return DATE_REGEXP.test(modelValue);
+				if(DATE_REGEXP.test(viewValue))
+					return true;
+				// console.log('Invalid date found (model, view)', modelValue, viewValue );
+				return false;
 			};
 	
 
@@ -133,4 +136,4 @@
 			}
 		}
 	}
-})(window.angular);
+})();

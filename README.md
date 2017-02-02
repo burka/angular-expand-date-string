@@ -1,15 +1,15 @@
-# Angular Format Date String
+# Angular Expand Date String
 
-Format date input string ```301200``` to ```30.12.2000``` on blur.
+Expand date input string ```30.2.00``` or ```300200``` to ```30.02.2000``` on blur.
  
 Only for ```DD.MM.YYYY``` formats - merge requests (with tests) welcome .
 
 # Install
 
-    npm install --save angular-format-date-string
+    npm install --save angular-expand-date-string
 
 # Usage
 
-Just add ```format-date-string``` to a text input and it will format the input on blur.
+Just add ```expand-date-string``` to a text input and it will format the input on blur.
 
-    <input ng-model="start" format-date-string></input>
+    <input ng-model="start" type="text" expand-date-string></input>
