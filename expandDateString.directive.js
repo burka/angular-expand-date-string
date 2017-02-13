@@ -31,7 +31,7 @@
 					year += 2000;
 				}
 			}
-			return year;
+			return year.toString().substring(0,4);
 		}
 
 		function addDotsAndFullYear(input) {
@@ -92,7 +92,7 @@
 				// console.log('Invalid date found (model, view)', modelValue, viewValue );
 				return false;
 			};
-	
+
 
 			function isCursorBeforeEnd(inputValue) {
 				return el.selectionStart < inputValue.length;
@@ -116,7 +116,7 @@
 			function eatAllNonRelevantCharacters(input){
 				return input.replace(/[^0-9,\.]/g,'');
 			}
-			
+
 			function transformInput(inputValue) {
 				inputValue = eatAllNonRelevantCharacters(inputValue);
 				var transformedInput = addDotsAndFullYear(inputValue);
@@ -130,7 +130,7 @@
 				lastValue = transformedInput;
 				return transformedInput;
 			}
-			
+
 			function transformElementValue(event){
 				transformInput(element.val());
 			}
