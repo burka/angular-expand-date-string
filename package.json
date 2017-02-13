@@ -1,6 +1,6 @@
 {
   "name": "angular-expand-date-string",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A simple date string formatting helper",
   "main": "expandDateString.directive.js",
   "scripts": {
