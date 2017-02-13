@@ -84,13 +84,19 @@
 
 
 			function dateStringValidator(modelValue, viewValue) {
-				if (modelCtrl.$isEmpty(viewValue)) {
+				if (modelCtrl.$isEmpty(viewValue))
 					return true;
-				}
-				if(DATE_REGEXP.test(viewValue))
-					return true;
-				// console.log('Invalid date found (model, view)', modelValue, viewValue );
-				return false;
+				if(!DATE_REGEXP.test(viewValue))
+					return false;
+
+                var parts = viewValue.split('.');
+                var day = parseInt(parts[0]);
+                var month = (parseInt(parts[1]) - 1);
+                var year = parseInt(parts[2]);
+                var date = new  Date(year, month, day);
+                return date.getDate() === day
+                    && date.getMonth() === month
+                    && date.getFullYear() === year;
 			};
 
 

@@ -124,6 +124,16 @@ describe('expand date string', function () {
         describe('should eat extraneous numbers', function () {
             test('12.12.2012', '12.12.20121', 11, '12.12.2012', 10, true);
         });
+        describe('should validate date to ba a valid date', function () {
+            testValid('01.01.2000', true);
+            testValid('31.01.2000', true);
+            testValid('32.01.2000', false);
+            testValid('28.02.2000', true);
+            testValid('29.02.2000', true);
+            testValid('30.02.2000', false);
+            testValid('01.13.2000', false);
+            testValid('01.01.1900', true);
+        });
 
         it('should format on blur', function () {
             element.val('1.01.2000');
@@ -141,8 +151,13 @@ describe('expand date string', function () {
 
 
     });
-    function test(prevVal, input, pos, output, posAfter, expectedToBeValid) {
-        var description = 'test(\'' + prevVal + '\', \'' + input + '\', ' + pos + ', \'' + output + '\', ' + posAfter + ', ' + expectedToBeValid + '); -> ';
+    function testValid(input, expectedToBeValid) {
+        var description = 'testValid(\'' + input + '\', ' + expectedToBeValid + ');'
+        var pos = input.length;
+        test(input, input, pos, input, pos, expectedToBeValid, description);
+    }
+    function test(prevVal, input, pos, output, posAfter, expectedToBeValid, description) {
+        description = description || 'test(\'' + prevVal + '\', \'' + input + '\', ' + pos + ', \'' + output + '\', ' + posAfter + ', ' + expectedToBeValid + '); -> ';
         it(description, function test() {
             element.val(prevVal);
             element.triggerHandler('input');
