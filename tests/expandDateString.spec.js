@@ -121,6 +121,9 @@ describe('expand date string', function () {
             test('Invalid Date', 'Invalid Date', 0, 'Invalid Date', 0, false);
             test('01.01.', '01.01.asd', 9, '01.01.', 6, false);
         });
+        describe('should eat extraneous numbers', function () {
+            test('12.12.2012', '12.12.20121', 11, '12.12.2012', 10, true);
+        });
 
         it('should format on blur', function () {
             element.val('1.01.2000');
@@ -152,13 +155,13 @@ describe('expand date string', function () {
 
             expect(element.val()).toEqual(output);
             expect(form.controller('form').$valid).toBe(expectedToBeValid, '$valid has wrong value');
-            expect(element[0].selectionStart).toEqual(posAfter, 'Cursor position is wrong');
-            expect(element[0].selectionEnd).toEqual(posAfter, 'Cursor position is wrong');
             var textModel = angular.element(element).scope().textModel;
             if (expectedToBeValid)
                 expect(textModel).toEqual(output, 'Model value should be set if valid');
             else
                 expect(textModel).toBeUndefined();
+            expect(element[0].selectionStart).toEqual(posAfter, 'Cursor start position is wrong');
+            expect(element[0].selectionEnd).toEqual(posAfter, 'Cursor end position is wrong');
         });
     }
 
