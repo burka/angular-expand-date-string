@@ -151,11 +151,13 @@ describe('expand date string', function () {
 
 
     });
+
     function testValid(input, expectedToBeValid) {
         var description = 'testValid(\'' + input + '\', ' + expectedToBeValid + ');'
         var pos = input.length;
         test(input, input, pos, input, pos, expectedToBeValid, description);
     }
+
     function test(prevVal, input, pos, output, posAfter, expectedToBeValid, description) {
         description = description || 'test(\'' + prevVal + '\', \'' + input + '\', ' + pos + ', \'' + output + '\', ' + posAfter + ', ' + expectedToBeValid + '); -> ';
         it(description, function test() {
@@ -179,12 +181,4 @@ describe('expand date string', function () {
             expect(element[0].selectionEnd).toEqual(posAfter, 'Cursor end position is wrong');
         });
     }
-
-    function input(chars, element) {
-        var e = angular.element.Event('keydown');
-        e.which = keyCode;
-        element.trigger(e);
-        $rootScope.$digest();
-    }
-})
-;
+});
